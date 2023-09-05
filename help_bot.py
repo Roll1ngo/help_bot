@@ -1,3 +1,4 @@
+from switcher import main as switcher
 from help_bot_classes import (
     AddressBook,
     Name,
@@ -335,6 +336,7 @@ COMMANDS = {
     ("good_bye",): exit,
     ("hello",): hello,
     ("search",): search,
+    ("switcher",): switcher,
     ("show_contacts_tabl",): create_request_show_table,
     ("show_contacts_string",): create_request_show_string,
     ("help",): create_request_show_help,
@@ -383,7 +385,7 @@ def main():
         )
         command, data = parser(user_input)
         if command == exit:
-            print("Buy!")
+            print("Buy! Have a nice day!")
             break
         result = command(data)
         print(result)

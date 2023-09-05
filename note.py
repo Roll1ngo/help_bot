@@ -1,3 +1,4 @@
+from switcher import main as switcher
 from notes_class import (
     Notepad,
     Deadline,
@@ -255,6 +256,10 @@ def hello_command(*args):
     return "How can I help you?>>>"
 
 
+def switcher_command(*args):
+    switcher()
+
+
 COMMANDS = {
     add_command: ("add",),
     add_tag_command: ("+",),
@@ -269,6 +274,7 @@ COMMANDS = {
     show_pages_command: ("show pages",),
     search_str_command: ("search", "find"),
     tag_command: ("tag", "tags"),
+    switcher_command: ("switcher"),
     create_request_show_help: ("help",),
     exit_command: ("exit", "close", "bye", "good bye", "stop"),
 }

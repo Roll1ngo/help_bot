@@ -1,18 +1,18 @@
-from help_bot.switcher import main as switcher
+from switcher import main as switcher
 from pathlib import Path
 import uuid
 import shutil
 import os
 
-from help_bot.normalize import normalize
+from normalize import normalize
 
 CATEGORIES = {
-        'images': ['.JPEG', '.PNG', '.JPG', '.SVG'],
-        'documents': ['.DOC', '.DOCX', '.TXT', '.PDF', '.XLSX', '.PPTX'],
-        'audio': ['.MP3', '.OGG', '.WAV', '.AMR'],
-        'video': ['.AVI', '.MP4', '.MOV', '.MKV'],
-        'archives': ['.ZIP', '.GZ', '.TAR']
-    }
+    "images": [".JPEG", ".PNG", ".JPG", ".SVG"],
+    "documents": [".DOC", ".DOCX", ".TXT", ".PDF", ".XLSX", ".PPTX"],
+    "audio": [".MP3", ".OGG", ".WAV", ".AMR"],
+    "video": [".AVI", ".MP4", ".MOV", ".MKV"],
+    "archives": [".ZIP", ".GZ", ".TAR"],
+}
 
 
 def move_file(file: Path, root_dir: Path, categorie: str) -> None:
@@ -21,7 +21,7 @@ def move_file(file: Path, root_dir: Path, categorie: str) -> None:
         target_dir.mkdir()
     new_name = target_dir.joinpath(f"{normalize(file.stem)}{file.suffix}")
     if new_name.exists():
-       new_name = new_name.with_name(f"{new_name.stem}-{uuid.uuid4()}{file.suffix}")
+        new_name = new_name.with_name(f"{new_name.stem}-{uuid.uuid4()}{file.suffix}")
     file.rename(new_name)
 
 
@@ -31,54 +31,50 @@ def get_categories(file: Path) -> str:
         if ext in exts:
             return cat
     return "other"
- 
+
 
 def sort_folder(path: Path) -> None:
-    
     category_files = {
-        'images': [],
-        'documents': [],
-        'audio': [],
-        'video': [],
-        'archives': [],
-        'other':[]
+        "images": [],
+        "documents": [],
+        "audio": [],
+        "video": [],
+        "archives": [],
+        "other": [],
     }
-
 
     for item in path.glob("**/*"):
         if item.is_file():
-                cat = get_categories(item)
-                move_file(item, path, cat)
-                category_files[cat].append(item.name)
+            cat = get_categories(item)
+            move_file(item, path, cat)
+            category_files[cat].append(item.name)
 
-    known_cat = [value for key, value in category_files.items() if key != 'other']
+    known_cat = [value for key, value in category_files.items() if key != "other"]
     known_cat = sum(known_cat, [])
     known_cat = [Path(value).suffix for value in known_cat]
 
-    unknown_cat = [value for key, value in category_files.items() if key == 'other']
+    unknown_cat = [value for key, value in category_files.items() if key == "other"]
     unknown_cat = sum(unknown_cat, [])
     unknown_cat = [Path(value).suffix for value in unknown_cat]
 
-    print('Files:')
+    print("Files:")
     for key, value in category_files.items():
         if value:
-            print(key, '; '.join(set(value)))
+            print(key, "; ".join(set(value)))
 
-    print('Known category: ', ', '.join(set(known_cat)))
-    print('Unknown category: ', ', '.join(set(unknown_cat)))
-        
+    print("Known category: ", ", ".join(set(known_cat)))
+    print("Unknown category: ", ", ".join(set(unknown_cat)))
+
 
 def delete_empty_folder(path: Path) -> None:
-    
     folders_to_delete = [f for f in path.glob("**")]
     for folder in folders_to_delete[::-1]:
         if folder.is_dir() and not len(os.listdir(folder._str)):
-            folder.rmdir() 
+            folder.rmdir()
 
 
 def unpack_archive(path: Path) -> None:
-    
-    for cat in CATEGORIES['archives']:
+    for cat in CATEGORIES["archives"]:
         for item in path.glob("**/*" + cat.lower()):
             if item.is_file():
                 target_dir = Path(path.joinpath(Path(item).stem))
@@ -90,23 +86,25 @@ def unpack_archive(path: Path) -> None:
 
 def main():
     while True:
-        command = input('Type "path/to/directory" (leave blank for sorting current directory), or "switcher" to switch mode\n>>> ')
+        command = input(
+            'Type "path/to/directory" (leave blank for sorting current directory), or "switcher" to switch mode\n>>> '
+        )
         if command == "switcher":
             switcher()
         if command == "exit":
             break
-        
+
         path = Path(command)
 
         if not path.exists():
-            print(f'{path} not exist!')
+            print(f"{path} not exist!")
             continue
 
         sort_folder(path)
-        unpack_archive(path.joinpath('archives'))
+        unpack_archive(path.joinpath("archives"))
         delete_empty_folder(path)
         break
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
