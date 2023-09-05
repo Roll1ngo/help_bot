@@ -274,7 +274,7 @@ COMMANDS = {
     show_pages_command: ("show pages",),
     search_str_command: ("search", "find"),
     tag_command: ("tag", "tags"),
-    switcher_command: ("switcher"),
+    switcher_command: ("switcher",),
     create_request_show_help: ("help",),
     exit_command: ("exit", "close", "bye", "good bye", "stop"),
 }
