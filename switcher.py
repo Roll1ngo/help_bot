@@ -5,7 +5,7 @@ def main(*args):
     from help_bot import main as contacts_mode
 
     print(
-        "Print [number] or [name] of mode to choose your one:\n [1]: [contacts] \n [2]: [notes] \n [3]: [sorter]"
+        "Print [number] or [name] of mode to choose your one:\n [1]: [contacts] \n [2]: [notes] \n [3]: [sorter]\n [4]: [exit]"
     )
 
     while True:
@@ -21,6 +21,8 @@ def main(*args):
         elif mode == "3" or mode == "sorter":
             print("Sorter mode enabled")
             sorter_mode()
+            sys.exit()
+        elif mode == "exit" or mode == "4":
             sys.exit()
         else:
             print("Invalid mode argument")
